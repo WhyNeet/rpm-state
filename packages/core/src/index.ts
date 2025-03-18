@@ -1,2 +1,3 @@
-export * from "./source.js"
-export * from "./is.js"
+export * from "./source"
+export * from "./is"
+export * from "./effect"
