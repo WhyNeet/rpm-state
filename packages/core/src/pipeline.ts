@@ -4,7 +4,7 @@ export type Apply<T> = (newValue: T) => void;
 
 export interface Pipeline<T> extends Apply<T> {
   subscribe(listener: Listener<T>): Cleanup,
-  map(mapper: (value: T) => T): Pipeline<T>,
+  map<P>(mapper: (value: T) => P): Pipeline<P>,
   combine<P, R>(other: Pipeline<P>, combiner: (val1: T, val2: P) => R): Pipeline<R>,
   filter(filter: (value: T) => boolean): Pipeline<T>
 }
