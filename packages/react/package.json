@@ -1,0 +1,31 @@
+{
+  "name": "@rpm-state/react",
+  "version": "0.1.0",
+  "description": "React integration for RPM state management",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "@rpm-state/core": "*"
+  },
+  "devDependencies": {
+    "react": "^18.2.0",
+    "@types/react": "^18.2.0",
+    "rollup": "^4.9.6",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@rpm-state/core": "workspace:^"
+  }
+}

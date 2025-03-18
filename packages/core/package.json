@@ -1,7 +1,7 @@
 {
-  "name": "core",
+  "name": "@rpm-state/core",
   "version": "1.0.0",
-  "description": "Statify core package.",
+  "description": "RPM core package.",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
