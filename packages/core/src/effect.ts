@@ -1,7 +1,7 @@
-import { Cleanup, Source } from "./source";
+import { Cleanup, Pipeline } from "./pipeline";
 
 export type EffectCallback<T> = (value: T) => void;
-export type EffectApply<T> = (source: Source<T>) => Cleanup;
+export type EffectApply<T> = (source: Pipeline<T>) => Cleanup;
 
 export interface Effect<T> extends EffectApply<T> { }
 
