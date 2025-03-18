@@ -10,7 +10,8 @@ export function factory<T>(fn: (initial?: T) => T): ValueFactory<T> {
 }
 
 export interface Source<T> extends Apply<T> {
-  subscribe(listener: Listener<T>): Cleanup
+  subscribe(listener: Listener<T>): Cleanup,
+  map(mapper: (value: T) => T): Source<T>
 }
 
 export function source<T>(initialValue?: T): Source<T> {
@@ -23,6 +24,13 @@ export function source<T>(initialValue?: T): Source<T> {
       listeners.delete(listener);
     }
   }
+
+  const map = (mapper: (value: T) => T): Source<T> => {
+    const mappedSource = source<T>();
+    subscribe((val) => mappedSource(mapper(val)));
+    return mappedSource;
+  }
+
   const apply: Source<T> = (newValue: T | ValueFactory<T>) => {
     if (is.valueFactory<T>(newValue)) {
       value = newValue.fn(value);
@@ -33,6 +41,7 @@ export function source<T>(initialValue?: T): Source<T> {
   }
 
   apply.subscribe = subscribe;
+  apply.map = map;
 
   return apply
 }
