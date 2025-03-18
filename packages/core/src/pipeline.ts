@@ -5,7 +5,8 @@ export type Apply<T> = (newValue: T) => void;
 export interface Pipeline<T> extends Apply<T> {
   subscribe(listener: Listener<T>): Cleanup,
   map(mapper: (value: T) => T): Pipeline<T>,
-  combine<P, R>(other: Pipeline<P>, combiner: (val1: T, val2: P) => R): Pipeline<R>
+  combine<P, R>(other: Pipeline<P>, combiner: (val1: T, val2: P) => R): Pipeline<R>,
+  filter(filter: (value: T) => boolean): Pipeline<T>
 }
 
 export function pipeline<T>(): Pipeline<T> {
@@ -43,6 +44,14 @@ export function pipeline<T>(): Pipeline<T> {
     return combined;
   }
 
+  const filter = (filter: (value: T) => boolean): Pipeline<T> => {
+    const filtered = pipeline<T>();
+
+    subscribe(val => filter(val) && filtered(val));
+
+    return filtered;
+  }
+
   const apply: Pipeline<T> = (value: T) => {
     for (const listener of listeners) listener(value);
   }
@@ -50,6 +59,7 @@ export function pipeline<T>(): Pipeline<T> {
   apply.subscribe = subscribe;
   apply.map = map;
   apply.combine = combine;
+  apply.filter = filter;
 
   return apply
 }
