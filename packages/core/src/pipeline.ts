@@ -1,15 +1,10 @@
 export type Cleanup = () => void;
 export type Listener<T> = (value: T) => void;
-export type ValueFactory<T> = { fn: (initial?: T) => T };
 export type Apply<T> = (newValue: T) => void;
-
-export function factory<T>(fn: (initial?: T) => T): ValueFactory<T> {
-  return { fn }
-}
 
 export interface Pipeline<T> extends Apply<T> {
   subscribe(listener: Listener<T>): Cleanup,
-  map(mapper: (value: T) => T): Pipeline<T>
+  map(mapper: (value: T) => T): Pipeline<T>,
 }
 
 export function pipeline<T>(): Pipeline<T> {
