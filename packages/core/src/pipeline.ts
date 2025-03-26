@@ -3,10 +3,11 @@ export type Listener<T> = (value: T) => void;
 export type Apply<T> = (newValue: T) => void;
 
 export interface Pipeline<T> extends Apply<T> {
-  subscribe(listener: Listener<T>): Cleanup,
-  map<P>(mapper: (value: T) => P): Pipeline<P>,
-  combine<P, R>(other: Pipeline<P>, combiner: (val1: T, val2: P) => R): Pipeline<R>,
-  filter(filter: (value: T) => boolean): Pipeline<T>
+  subscribe(listener: Listener<T>): Cleanup;
+  map<P>(mapper: (value: T) => P): Pipeline<P>;
+  combine<P, R>(other: Pipeline<P>, combiner: (val1: T, val2: P) => R): Pipeline<R>;
+  filter(filter: (value: T) => boolean): Pipeline<T>;
+  merge(other: Pipeline<T>): Pipeline<T>;
 }
 
 export function pipeline<T>(): Pipeline<T> {
@@ -52,10 +53,20 @@ export function pipeline<T>(): Pipeline<T> {
     return filtered;
   }
 
+  const merge = (other: Pipeline<T>): Pipeline<T> => {
+    const merged = pipeline<T>();
+
+    subscribe(merged);
+    other.subscribe(merged);
+
+    return merged;
+  }
+
   const apply: Pipeline<T> = (value: T) => {
     for (const listener of listeners) listener(value);
   }
 
+  apply.merge = merge;
   apply.subscribe = subscribe;
   apply.map = map;
   apply.combine = combine;
