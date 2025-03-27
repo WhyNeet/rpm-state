@@ -8,6 +8,7 @@ export interface Pipeline<T> extends Apply<T> {
   combine<P, R>(other: Pipeline<P>, combiner: (val1: T, val2: P) => R): Pipeline<R>;
   filter(filter: (value: T) => boolean): Pipeline<T>;
   merge(other: Pipeline<T>): Pipeline<T>;
+  tap(f: (value: T) => void): Pipeline<T>;
 }
 
 export function pipeline<T>(): Pipeline<T> {
@@ -21,9 +22,9 @@ export function pipeline<T>(): Pipeline<T> {
   }
 
   const map = <P>(mapper: (value: T) => P): Pipeline<P> => {
-    const mappedSource = pipeline<P>();
-    subscribe((val) => mappedSource(mapper(val)));
-    return mappedSource;
+    const mapped = pipeline<P>();
+    subscribe((val) => mapped(mapper(val)));
+    return mapped;
   }
 
   const combine = <P, R>(other: Pipeline<P>, combiner: (val1: T, val2: P) => R): Pipeline<R> => {
@@ -62,6 +63,8 @@ export function pipeline<T>(): Pipeline<T> {
     return merged;
   }
 
+  const tap = (f: (value: T) => void): Pipeline<T> => pipeline<T>().map(val => { f(val); return val; })
+
   const apply: Pipeline<T> = (value: T) => {
     for (const listener of listeners) listener(value);
   }
@@ -71,6 +74,7 @@ export function pipeline<T>(): Pipeline<T> {
   apply.map = map;
   apply.combine = combine;
   apply.filter = filter;
+  apply.tap = tap;
 
   return apply
 }

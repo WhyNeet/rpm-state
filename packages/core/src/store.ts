@@ -27,6 +27,7 @@ export function store<T>(initialValue: T): Store<T> {
   store.filter = pipe.filter;
   store.combine = pipe.combine;
   store.merge = pipe.merge;
+  store.tap = pipe.tap;
 
   return store;
 }
